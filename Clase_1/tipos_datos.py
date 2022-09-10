@@ -15,7 +15,7 @@ print(a[-1])
 print(a.lower()) 
 print(a.upper())
 print(a.split())
-print(a.len(a.split()))
+print(a, len(a.split()))
 
 # List es conjunto o array que permite almacenar lo que sea
 lista_1 = ['hola',4,2.5,True,[1,2,3,4],('a','b')]
