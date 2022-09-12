@@ -1,7 +1,7 @@
 # Bucle de repeticion hay 2 en python
 
 # For
-'''for i in 'Python':
+for i in 'Python':
     print(i)
 
 lista = [True, False, 1, 2, 3, 4, 'Hola']
@@ -27,7 +27,7 @@ x = 10
 while x > 0 :
     print(x)
     x -= 1
-    '''
+    
 
 
 
