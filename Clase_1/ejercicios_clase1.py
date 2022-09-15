@@ -1,4 +1,4 @@
-'''
+
 # 1 Idear la manera de realizar la siguiente salida (a, b y c son variables).:
 print("a\tb\tc\n2.4\t-3.21\t47.8")
 
@@ -28,7 +28,7 @@ print(diccionario.keys())
 print(diccionario.items())
 print(diccionario.values())
 print(diccionario.get('uno','no esta'))
-'''
+
 
 print('''
    WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
