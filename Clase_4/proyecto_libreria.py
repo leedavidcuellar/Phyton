@@ -1,3 +1,4 @@
+from ast import While
 import getpass
 from operator import and_
 
@@ -48,19 +49,28 @@ class Libro(Biblioteca):
         """
         if len(lista_libros) == 0:
             print('\nNo hay libros cargados\n---')
-        else:    
-            libro_abuscar = input('\nIngrese el libro que quiere retirar: ')
-            for libroP in lista_libros:
-                if (libroP.nombre == libro_abuscar):
-                    if (libroP.num_ejemplares > 0):
+        else:  
+            auxP = False
+            while auxP == False:  
+                libro_abuscar = input('\nIngrese el Nombre del libro que quiere retirar: ')
+                for libroP in lista_libros:
+                    if (libroP.nombre == libro_abuscar):
+                        if (libroP.num_ejemplares > 0):
                             libroP.num_ejemplares = libroP.num_ejemplares - 1
                             libroP.num_prestados += 1
                             Usuario.lista_libros_usuario.append(libroP)
                             print('\nLibro prestado')
-                    else:
-                            print('\nNo hay Ejemplares')    
-                else:
-                    print('\nNo hay libros para prestar')
+                            auxP = True
+                            break
+                        else:
+                            print('\nNo hay Ejemplares, puede consultar en otro momento\n')  
+                            auxP = True 
+                            break 
+                if auxP == False:
+                    respuestaP = input(
+                    '\n\nEl libro ingresado No se encuentra o Escribio mal el nombre\n\nDesea buscar denuevo, S (Si)/N (No): ').upper()
+                    if respuestaP == 'N':
+                        auxP = True
 
     def devolucion_libro(lista_libros, Usuario):
         """Permite devolver libro saolicitado
@@ -70,15 +80,26 @@ class Libro(Biblioteca):
         if len(lista_libros) == 0:
             print('\nNo hay libros cargados\n---')
         else:
-            libro_abuscar = input('\nIngrese el libro que quiere devolver: ')
-            for libroD in lista_libros:
-                if (libroD.nombre == libro_abuscar):
-                    libroD.num_ejemplares = libroD.num_ejemplares + 1
-                    libroD.num_prestados -= 1
-                    Usuario.lista_libros_usuario.delete(libroD)
-                    print('\nLibro devuelto')
-                else:
-                    print('\nEse libro no esta')
+            auxDv = False
+            while auxDv == False:  
+                libro_abuscar = input('\nIngrese el libro que quiere devolver: ')
+                for libroD in lista_libros:
+                    if (libroD.nombre == libro_abuscar):
+                        libroD.num_ejemplares = libroD.num_ejemplares + 1
+                        libroD.num_prestados -= 1
+                        Usuario.lista_libros_usuario.remove(libroD)
+                        print('\nLibro devuelto')
+                        auxDv = True
+                        break
+                    else:
+                        print('\nEse libro no esta en su lista')
+                        auxDv = True
+                        break
+                if auxDv == False:
+                    respuestaP = input(
+                        '\n\nEl libro ingresado No se encuentra o Escribio mal el nombre\n\nDesea buscar denuevo, S (Si)/N (No): ').upper()
+                    if respuestaP == 'N':
+                        auxDv = True        
 
 class Usuario():
     def __init__(self, nombre, apellido, mail, contrasena, lista_libros_usuario):
@@ -93,8 +114,9 @@ class Usuario():
 # Metodos y Variables Globales
 lista_libros = []
 lista_usuarios = []
-pass_adm = "12345"
-admin = Usuario(nombre='admin', apellido= 'admin', mail='admin@biblioteca.com',contrasena=pass_adm, lista_libros_usuario=lista_libros)
+pass_adm = '12345'
+mail_adm = 'admin@biblioteca.com'
+admin = Usuario(nombre='admin', apellido= 'admin', mail=mail_adm,contrasena=pass_adm, lista_libros_usuario=lista_libros)
 lista_usuarios.append(admin)
 
 def crear_varios_libro(cant, lista_libros):
@@ -186,23 +208,24 @@ def administrador_acciones():
     """Muestra las tareas que puede hacer el Administrador
      password: 12345
     """
-    print('\n--- Bienvenido al sistema Carga de libros ---\n')
     while True:
-        print('\n1 - Agregar Libros\n2 - Mostrar Libros\n3 - Borrar Libros\n4 - Mostrar Usuarios\n5 - Salir')
+        print('\n--- Bienvenido al sistema Carga de libros ---\n1 - Agregar Libros\n2 - Mostrar Libros\n3 - Borrar Libros\n4 - Mostrar Usuarios\n5 - Salir')
         opcion_Adm = int(input('\nIngrese la opcion deseada: '))
         if opcion_Adm == 1:
                 cantidad_libros_ingresar = int(
                     input('\nIngrese cantidad libros a ingresar: '))
                 crear_varios_libro(cantidad_libros_ingresar, lista_libros)
         elif opcion_Adm == 2:
-                print('---- Listado de Libros ----')
+                print('\n---- Listado de Libros ----')
                 mostrar_libros(lista_libros)
         elif opcion_Adm == 3:
                 borrar_libro(lista_libros)
         elif opcion_Adm == 4:
+            print('\n---- Listado de Usuarios ----')
             mostrar_usuarios(lista_usuarios)
         elif opcion_Adm == 5:    
-                break
+            print('\nCerro su Sesion de Administrador\n')
+            break
         else:
                 print('\nLa opcion de Administrador ingresada NO corresponde\n')
 
@@ -222,9 +245,10 @@ def usuario_acciones(usuario_aux):
         elif opcion_usu == 3:
             Libro.devolucion_libro(lista_libros,usuario_aux)
         elif opcion_usu == 4:
+            print('\n---- Listado Libros Pedidos ----')
             mostrar_libros(usuario_aux.lista_libros_usuario)
         elif opcion_usu == 5:    
-            print('Cerro su Sesion')
+            print('\nCerro su Sesion de Usuario\n')
             break
         else:
             print('\nLa opcion de Usuario ingresada NO corresponde\n')
@@ -249,7 +273,7 @@ def logueo_usuario():
         elif opcion_logueo == 2:
             crear_usuario()
         elif opcion_logueo == 3:
-            print('Salio de logueo o resgistro usuario')
+            print('\nSalio de logueo o resgistro usuario\n')
             break
         else:
             print('\nLa opcion Ingresada no corresponde al Sector Usuario\n')                 
