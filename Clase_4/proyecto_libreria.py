@@ -52,14 +52,14 @@ class Libro(Biblioteca):
         else:  
             auxP = False
             while auxP == False:  
-                libro_abuscar = input('\nIngrese el Nombre del libro que quiere retirar: ')
+                libro_abuscar = input('\nIngrese el Nombre del Libro que quiere retirar: ')
                 for libroP in lista_libros:
                     if (libroP.nombre == libro_abuscar):
                         if (libroP.num_ejemplares > 0):
                             libroP.num_ejemplares = libroP.num_ejemplares - 1
                             libroP.num_prestados += 1
                             Usuario.lista_libros_usuario.append(libroP)
-                            print('\nLibro prestado')
+                            print('\nLibro prestado correctamente')
                             auxP = True
                             break
                         else:
@@ -73,7 +73,7 @@ class Libro(Biblioteca):
                         auxP = True
 
     def devolucion_libro(lista_libros, Usuario):
-        """Permite devolver libro saolicitado
+        """Permite devolver libro solicitado
         Args:
             lista_libros (Libros): Coleccion de libros a devolver
         """
@@ -82,13 +82,13 @@ class Libro(Biblioteca):
         else:
             auxDv = False
             while auxDv == False:  
-                libro_abuscar = input('\nIngrese el libro que quiere devolver: ')
+                libro_abuscar = input('\nIngrese el Nombre del Libro que quiere devolver: ')
                 for libroD in lista_libros:
                     if (libroD.nombre == libro_abuscar):
                         libroD.num_ejemplares = libroD.num_ejemplares + 1
                         libroD.num_prestados -= 1
                         Usuario.lista_libros_usuario.remove(libroD)
-                        print('\nLibro devuelto')
+                        print('\nLibro devuelto correctamente')
                         auxDv = True
                         break
                     else:
@@ -154,7 +154,7 @@ def crear_usuario():
             break
     
     lista_usuarios.append(usuario_aux)
-    print('\nUsuario/s creado correstamente\n')
+    print('\nUsuario/s creado correctamente\n')
 
 def mostrar_usuarios(lista_usuarios):
     """Permite Mostar los usuarios
@@ -194,7 +194,7 @@ def borrar_libro(lista_libros):
             if (libro.nombre == nombre_borrar):
                 lista_libros.remove(libro)
                 auxB = True
-                print('\nLibro eliminado')
+                print('\nLibro eliminado correctamente')
                 break
 
         if auxB == False:
@@ -235,7 +235,7 @@ def usuario_acciones(usuario_aux):
         usuario_aux (Usuario): Usuario Logueado
     """
     while True:
-        print('\n--- Bienvenido al sistema Usuarios Bibioteca ---\n1 - Mostrar Libros a Pedir\n2 - Pedir Libro\n3 - Devolver Libro\n4 - Mis Libros Solicitados\n5 - Salir')
+        print('\n--- Bienvenido al Sistema de Usuarios de la Bibioteca ---\n1 - Mostrar Libros a Pedir\n2 - Pedir Libro\n3 - Devolver Libro\n4 - Mis Libros Solicitados\n5 - Salir')
         opcion_usu = int(input('\nIngrese la opcion deseada: '))
         if opcion_usu == 1:
             print('\n---- Listado de Libros a Pedir ----')
@@ -258,7 +258,7 @@ def logueo_usuario():
     """
     while True:
         aux = False
-        print('\n--- Bienvenido al Sector del Usuario ---\n1 - Loguearse\n2 - Registrarse\n3 - Salir')
+        print('\n--- Bienvenido al Logueo o Registro de Usuarios ---\n1 - Loguearse\n2 - Registrarse\n3 - Salir')
         opcion_logueo = int(input('\nIngrese la opcion deseada: '))
         if opcion_logueo == 1:
             usuario_mail = input('Ingrese su Mail de Usuario: ')
@@ -273,19 +273,19 @@ def logueo_usuario():
         elif opcion_logueo == 2:
             crear_usuario()
         elif opcion_logueo == 3:
-            print('\nSalio de logueo o resgistro usuario\n')
+            print('\nSalio de Logueo o Resgistro de Usuarios\n')
             break
         else:
-            print('\nLa opcion Ingresada no corresponde al Sector Usuario\n')                 
+            print('\nLa opcion Ingresada no corresponde al Sector de Logueo de Usuarios\n')                 
 
-# Codigo del Programa
+# Codigo MAIN del Programa
 while True:
     print('\n--- Bienvenido a la Biblioteca ---\n1 - Usuario\n2 - Administrador\n3 - Salir')
     opcion = int(input('\nIngrese la opcion deseada: '))
     if opcion == 1:
         logueo_usuario()
     elif opcion == 2:
-        admin_mail = input('Ingrese Usuario: ')
+        admin_mail = input('Ingrese Su Usuario de Administrador: ')
         pass_solicitado = getpass.getpass('Ingrese Contrasenia para Acceder: ')
         for administrador in lista_usuarios:
             if(administrador.mail == admin_mail and administrador.contrasena == pass_solicitado):
