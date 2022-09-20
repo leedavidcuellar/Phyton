@@ -1,4 +1,5 @@
 import getpass
+from operator import and_
 
 # Clases y sus metodos
 class Biblioteca:
@@ -40,7 +41,7 @@ class Libro(Biblioteca):
         self.num_ejemplares = num_ejemplares
         self.num_prestados = num_prestados
 
-    def prestamo_libro(lista_libros):
+    def prestamo_libro(lista_libros,Usuario):
         """Permite Prestar un libro
         Args:
             lista_libros (Libros): coleccion de libros a buscar
@@ -54,14 +55,14 @@ class Libro(Biblioteca):
                     if (libroP.num_ejemplares > 0):
                             libroP.num_ejemplares = libroP.num_ejemplares - 1
                             libroP.num_prestados += 1
-                            
+                            Usuario.lista_libros_usuario.append(libroP)
                             print('\nLibro prestado')
                     else:
                             print('\nNo hay Ejemplares')    
                 else:
                     print('\nNo hay libros para prestar')
 
-    def devolucion_libro(lista_libros):
+    def devolucion_libro(lista_libros, Usuario):
         """Permite devolver libro saolicitado
         Args:
             lista_libros (Libros): Coleccion de libros a devolver
@@ -74,15 +75,27 @@ class Libro(Biblioteca):
                 if (libroD.nombre == libro_abuscar):
                     libroD.num_ejemplares = libroD.num_ejemplares + 1
                     libroD.num_prestados -= 1
+                    Usuario.lista_libros_usuario.delete(libroD)
                     print('\nLibro devuelto')
                 else:
                     print('\nEse libro no esta')
 
-
+class Usuario():
+    def __init__(self, nombre, apellido, mail, contrasena, lista_libros_usuario):
+        self.nombre = nombre
+        self.apellido = apellido
+        self.mail = mail
+        self.contrasena = contrasena
+        self.rol = 'usuario'
+        self.lista_libros_usuario = lista_libros_usuario
+         
 
 # Metodos y Variables Globales
 lista_libros = []
+lista_usuarios = []
 pass_adm = "12345"
+admin = Usuario(nombre='admin', apellido= 'admin', mail='admin@biblioteca.com',contrasena=pass_adm, lista_libros_usuario=lista_libros)
+lista_usuarios.append(admin)
 
 def crear_varios_libro(cant, lista_libros):
     """Permite crear colecciones de libros
@@ -101,6 +114,37 @@ def crear_varios_libro(cant, lista_libros):
             num_prestados=0
         )
         lista_libros.append(libro_Aux)
+        print('\nLibro/s agregados\n')
+
+
+def crear_usuario():
+    """ Permite Crear Usuarios
+    """
+    nombre_usuario = input('Ingrese su nombre: ')
+    apellido_usuario = input('Ingrese su apellido: ')
+    mail_usuario = input('Ingrese su mail: ')
+    while True:
+        contrasena_usuario = getpass.getpass('Ingrese una contrasena: ')
+        contrasena_usuario_2 = getpass.getpass('Vuelva ingresar la misma contrasena: ')
+        if(len(contrasena_usuario) == len(contrasena_usuario_2)):
+            lista_libro_usuario =[]
+            usuario_aux = Usuario(nombre=nombre_usuario, apellido=apellido_usuario, mail=mail_usuario, contrasena=contrasena_usuario, lista_libros_usuario=lista_libro_usuario)
+            break
+    
+    lista_usuarios.append(usuario_aux)
+    print('\nUsuario/s creado correstamente\n')
+
+def mostrar_usuarios(lista_usuarios):
+    """Permite Mostar los usuarios
+    Args:
+        lista_usuarios (Usuarios): Coleccion de Usuarios a mostrar
+    """
+    k = 0
+    while k < len(lista_usuarios):
+        print(f'Usuario {k+1}, Nombre: {lista_usuarios[k].nombre}, Apellido: {lista_usuarios[k].apellido}, Mail: {lista_usuarios[k].mail}, Contrasena: {lista_usuarios[k].contrasena}')
+        k += 1
+    if len(lista_usuarios) == 0:
+        print('\nNo hay Usuarios cargados\n-----')
 
 
 def mostrar_libros(lista_libros):
@@ -144,7 +188,7 @@ def administrador_acciones():
     """
     print('\n--- Bienvenido al sistema Carga de libros ---\n')
     while True:
-        print('\n1 - Agregar Libros\n2 - Mostrar Libros\n3 - Borrar Libros\n4 - Salir')
+        print('\n1 - Agregar Libros\n2 - Mostrar Libros\n3 - Borrar Libros\n4 - Mostrar Usuarios\n5 - Salir')
         opcion_Adm = int(input('\nIngrese la opcion deseada: '))
         if opcion_Adm == 1:
                 cantidad_libros_ingresar = int(
@@ -156,43 +200,76 @@ def administrador_acciones():
         elif opcion_Adm == 3:
                 borrar_libro(lista_libros)
         elif opcion_Adm == 4:
+            mostrar_usuarios(lista_usuarios)
+        elif opcion_Adm == 5:    
                 break
         else:
                 print('\nLa opcion de Administrador ingresada NO corresponde\n')
 
-def usuario_acciones():
-    """Muestra las tareas que puede hacer el usuario
+def usuario_acciones(usuario_aux):
+    """ Muestra las tareas que hace Usuario
+    Args:
+        usuario_aux (Usuario): Usuario Logueado
     """
-    print('\n--- Bienvenido al sistema Usuarios Bibioteca ---\n')
     while True:
-        print('\n1 - Mostrar Libros\n2 - Pedir Libro\n3 - Devolver Libro\n4 - Salir')
+        print('\n--- Bienvenido al sistema Usuarios Bibioteca ---\n1 - Mostrar Libros a Pedir\n2 - Pedir Libro\n3 - Devolver Libro\n4 - Mis Libros Solicitados\n5 - Salir')
         opcion_usu = int(input('\nIngrese la opcion deseada: '))
         if opcion_usu == 1:
             print('\n---- Listado de Libros a Pedir ----')
             mostrar_libros(lista_libros)
         elif opcion_usu == 2:
-            Libro.prestamo_libro(lista_libros)
+            Libro.prestamo_libro(lista_libros,usuario_aux)
         elif opcion_usu == 3:
-            Libro.devolucion_libro(lista_libros)
+            Libro.devolucion_libro(lista_libros,usuario_aux)
         elif opcion_usu == 4:
+            mostrar_libros(usuario_aux.lista_libros_usuario)
+        elif opcion_usu == 5:    
+            print('Cerro su Sesion')
             break
         else:
             print('\nLa opcion de Usuario ingresada NO corresponde\n')
 
-
+def logueo_usuario():
+    """ Permite Loguearse y Regitrar un Usuario
+    """
+    while True:
+        aux = False
+        print('\n--- Bienvenido al Sector del Usuario ---\n1 - Loguearse\n2 - Registrarse\n3 - Salir')
+        opcion_logueo = int(input('\nIngrese la opcion deseada: '))
+        if opcion_logueo == 1:
+            usuario_mail = input('Ingrese su Mail de Usuario: ')
+            pass_usuario_solicitado = getpass.getpass('Ingrese su Contrasenia: ')
+            for usuario_aux in lista_usuarios:
+                if usuario_aux.mail == usuario_mail and usuario_aux.contrasena == pass_usuario_solicitado:
+                    usuario_acciones(usuario_aux)  
+                    aux = True
+                    break 
+            if aux == False:    
+                    print('\nMail de Usuario/Contrasenia Incorrecta Vuelva a Ingresar\n')
+        elif opcion_logueo == 2:
+            crear_usuario()
+        elif opcion_logueo == 3:
+            print('Salio de logueo o resgistro usuario')
+            break
+        else:
+            print('\nLa opcion Ingresada no corresponde al Sector Usuario\n')                 
 
 # Codigo del Programa
 while True:
     print('\n--- Bienvenido a la Biblioteca ---\n1 - Usuario\n2 - Administrador\n3 - Salir')
     opcion = int(input('\nIngrese la opcion deseada: '))
     if opcion == 1:
-        usuario_acciones()
+        logueo_usuario()
     elif opcion == 2:
+        admin_mail = input('Ingrese Usuario: ')
         pass_solicitado = getpass.getpass('Ingrese Contrasenia para Acceder: ')
-        if(pass_solicitado  == pass_adm):
-            administrador_acciones()
-        else:
-            print('\nContrasenia Incorrecta Vuelva a Ingresar\n')    
+        for administrador in lista_usuarios:
+            if(administrador.mail == admin_mail and administrador.contrasena == pass_solicitado):
+                administrador_acciones()   
+                break 
+            else:
+                print('\nUsuario/Contrasenia Incorrecta Vuelva a Ingresar\n')  
+
     elif opcion == 3:
         break
     else:
