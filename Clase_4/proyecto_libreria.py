@@ -2,6 +2,8 @@ from ast import While
 import getpass
 from operator import and_
 
+# Realizado por Gonzalo Bisio y Lee David Cuellar
+
 # Clases y sus metodos
 class Biblioteca:
     """Clase Biblioteca
